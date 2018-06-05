@@ -1,0 +1,28 @@
+{
+  "name": "Git Clippy",
+  "short_name": "GitClippy",
+  "version": "1.0",
+  "manifest_version": 2,
+  "description": "Bringing the power of Microsoft Clippy to Github.",
+  "permissions": [
+    "*://*.github.com/",
+    "*://github.com/"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.github.com/",
+        "*://github.com/"
+      ],
+      "run_at": "document_end",
+      "js": [
+        "main.js"
+      ]
+    }
+  ]
+}
