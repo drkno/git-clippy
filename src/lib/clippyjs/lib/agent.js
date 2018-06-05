@@ -8,7 +8,7 @@ export default class Agent {
     constructor (path,data,sounds) {
         this.path = path;
 
-        this._queue = new Queue($.proxy(this._onQueueEmpty, this));
+        this._queue = new Queue((this._onQueueEmpty.bind(this));
 
         this._el = $('<div class="clippy"></div>').hide();
 
@@ -80,20 +80,20 @@ export default class Agent {
                 return;
             }
 
-            let callback = $.proxy(function (name, state) {
+            let callback = (function (name, state) {
                 // when exited, complete
                 if (state === Animator.States.EXITED) {
                     complete();
                 }
                 // if waiting,
                 if (state === Animator.States.WAITING) {
-                    this._el.animate({ top: y, left: x }, duration, $.proxy(function () {
+                    this._el.animate({ top: y, left: x }, duration, (function () {
                         // after we're done with the movement, do the exit animation
                         this._animator.exitAnimation();
-                    }, this));
+                    }).bind(this));
                 }
 
-            }, this);
+            }).bind(this);
 
             this._playInternal(anim, callback);
         }, this);
@@ -103,9 +103,9 @@ export default class Agent {
 
         // if we're inside an idle animation,
         if (this._isIdleAnimation() && this._idleDfd && this._idleDfd.state() === 'pending') {
-            this._idleDfd.done($.proxy(function () {
+            this._idleDfd.done((function () {
                 this._playInternal(animation, callback);
-            }, this))
+            }).bind(this))
         }
 
         this._animator.showAnimation(animation, callback);
@@ -130,7 +130,7 @@ export default class Agent {
 
             // if has timeout, register a timeout function
             if (timeout) {
-                window.setTimeout($.proxy(function () {
+                window.setTimeout((function () {
                     if (completed) return;
                     // exit after timeout
                     this._animator.exitAnimation();
@@ -138,7 +138,7 @@ export default class Agent {
             }
 
             this._playInternal(animation, callback);
-        }, this);
+        }).bind(this);
 
         return true;
     }
@@ -287,7 +287,7 @@ export default class Agent {
         let idleAnim = this._getIdleAnimation();
         this._idleDfd = $.Deferred();
 
-        this._animator.showAnimation(idleAnim, $.proxy(this._onIdleComplete, this));
+        this._animator.showAnimation(idleAnim, this._onIdleComplete.bind(this));
     }
 
     _onIdleComplete (name, state) {
@@ -330,11 +330,11 @@ export default class Agent {
     /**************************** Events ************************************/
 
     _setupEvents () {
-        $(window).on('resize', $.proxy(this.reposition, this));
+        $(window).on('resize', this.reposition.bind(this));
 
-        this._el.on('mousedown', $.proxy(this._onMouseDown, this));
+        this._el.on('mousedown', this._onMouseDown.bind(this));
 
-        this._el.on('dblclick', $.proxy(this._onDoubleClick, this));
+        this._el.on('dblclick', this._onDoubleClick.bind(this));
     }
 
     _onDoubleClick () {
@@ -388,13 +388,13 @@ export default class Agent {
         this._balloon.hide(true);
         this._offset = this._calculateClickOffset(e);
 
-        this._moveHandle = $.proxy(this._dragMove, this);
-        this._upHandle = $.proxy(this._finishDrag, this);
+        this._moveHandle = this._dragMove.bind(this);
+        this._upHandle = this._finishDrag.bind(this);
 
         $(window).on('mousemove', this._moveHandle);
         $(window).on('mouseup', this._upHandle);
 
-        this._dragUpdateLoop = window.setTimeout($.proxy(this._updateLocation, this), 10);
+        this._dragUpdateLoop = window.setTimeout(this._updateLocation.bind(this), 10);
     }
 
     _calculateClickOffset (e) {
@@ -410,7 +410,7 @@ export default class Agent {
 
     _updateLocation () {
         this._el.css({ top: this._targetY, left: this._targetX });
-        this._dragUpdateLoop = window.setTimeout($.proxy(this._updateLocation, this), 10);
+        this._dragUpdateLoop = window.setTimeout(this._updateLocation.bind(this), 10);
     }
 
     _dragMove (e) {
@@ -434,7 +434,7 @@ export default class Agent {
     }
 
     _addToQueue (func, scope) {
-        if (scope) func = $.proxy(func, scope);
+        if (scope) func = func.bind(scope);
         this._queue.queue(func);
     }
 

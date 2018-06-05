@@ -158,7 +158,7 @@ export default class Animator {
         this._draw();
         this._playSound();
 
-        this._loop = window.setTimeout($.proxy(this._step, this), this._currentFrame.duration);
+        this._loop = window.setTimeout(this._step.bind(this), this._currentFrame.duration);
 
 
         // fire events if the frames changed and we reached an end

@@ -1,6 +1,6 @@
 // import clippy from 'clippyjs';
 import clippy from '../lib/clippyjs/lib/index';
-import $ from 'jquery';
+// import $ from 'jquery';
 
 clippy.load('Clippy', agent => {
   agent.show();
@@ -183,4 +183,4 @@ clippy.load('Clippy', agent => {
   //     fun();
   //   }
   // }, 45000);
-}, void(0), chrome.runtime.getURL('agents/'));
+});

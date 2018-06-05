@@ -1,5 +1,3 @@
-import $ from 'jquery'
-
 export default class Queue {
     constructor (onEmptyCallback) {
         this._queue = [];
@@ -31,7 +29,7 @@ export default class Queue {
         this._active = true;
 
         // execute function
-        let completeFunction = $.proxy(this.next, this);
+        let completeFunction = this.next.bind(this);
         f(completeFunction);
     }
 
@@ -44,6 +42,3 @@ export default class Queue {
         this._progressQueue();
     }
 }
-
-
-

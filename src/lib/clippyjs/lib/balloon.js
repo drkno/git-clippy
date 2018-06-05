@@ -124,7 +124,7 @@ export default class Balloon {
             return;
         }
 
-        this._hiding = window.setTimeout($.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
+        this._hiding = window.setTimeout(this._finishHideBalloon.bind(this), this.CLOSE_BALLOON_DELAY);
     }
 
     _finishHideBalloon () {
@@ -143,7 +143,7 @@ export default class Balloon {
         let idx = 1;
 
 
-        this._addWord = $.proxy(function () {
+        this._addWord = (function () {
             if (!this._active) return;
             if (idx > words.length) {
                 delete this._addWord;
@@ -155,9 +155,9 @@ export default class Balloon {
             } else {
                 el.text(words.slice(0, idx).join(' '));
                 idx++;
-                this._loop = window.setTimeout($.proxy(this._addWord, this), time);
+                this._loop = window.setTimeout(this._addWord.bind(this), time);
             }
-        }, this);
+        }).bind(this);
 
         this._addWord();
 
@@ -183,7 +183,7 @@ export default class Balloon {
         if (this._addWord) {
             this._addWord();
         } else if (!this._hold && !this._hidden) {
-            this._hiding = window.setTimeout($.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
+            this._hiding = window.setTimeout(this._finishHideBalloon.bind(this), this.CLOSE_BALLOON_DELAY);
         }
     }
 }
